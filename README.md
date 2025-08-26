@@ -19,7 +19,7 @@ Este projeto foi criado como **base de estudo** e para demonstrar **boas prátic
 * **Lombok**
 * **JUnit 4 e 5**
 * **Mockito**
-* **Maven**
+* **Maven 3.8+**
 
 ---
 
@@ -27,7 +27,7 @@ Este projeto foi criado como **base de estudo** e para demonstrar **boas prátic
 
 * [Java 11+](https://adoptium.net/)
 * [Maven 3.8+](https://maven.apache.org/)
-* IDE recomendada: **Eclipse STS** ou **IntelliJ IDEA**  com suporte a Spring Boot.
+* IDE recomendada: **Eclipse STS** ou **IntelliJ IDEA** com suporte a Spring Boot.
 
 ---
 
@@ -79,7 +79,7 @@ mvn test
 
 ---
 
-## 📂 Estrutura do Projeto
+## 🗂️ Estrutura do Projeto
 
 ```
 app-demo
@@ -91,6 +91,7 @@ app-demo
  │    └── AppDemo.java  # Classe principal
  ├── src/test/java/...  # Testes unitários e de integração
  ├── pom.xml            # Configuração Maven
+ └── .github/workflows/maven.yml   # Pipeline de CI/CD no GitHub Actions
 ```
 
 ---
@@ -104,6 +105,22 @@ app-demo
 
 ---
 
+## ⚡ Integração Contínua (CI/CD)
+
+O projeto conta com um workflow configurado no **GitHub Actions** (`.github/workflows/maven.yml`) que executa automaticamente:
+
+1. **Checkout do código**
+2. **Compilação e execução dos testes unitários e de integração**
+3. **Upload de relatórios de testes** como artefatos no GitHub Actions
+4. **Publicação dos artefatos JAR/WAR** para download direto do workflow
+5. **Envio do snapshot de dependências** para o **Dependency Graph** do GitHub
+6. **Deploy automático no GitHub Packages (Maven Repository)** em caso de push na branch `main`
+
+📍 Configurações de segurança e análise podem ser ajustadas em:
+👉 [GitHub Settings - Security Analysis](https://github.com/ramiralvesmelo/app-demo/settings/security_analysis)
+
+---
+
 ## 📜 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
@@ -113,7 +130,3 @@ Sinta-se livre para usar, modificar e compartilhar.
 
 👨‍💻 **Autor:** Ramir Alves
 📧 Contato: [ramiralves@gmail.com](mailto:ramiralves@gmail.com)
-
-
-
-https://github.com/ramiralvesmelo/app-demo/settings/security_analysis

@@ -18,47 +18,47 @@ on:
 
 permissions:
   contents: read
-  packages: write   # necessário para publicar no GitHub Packages
+  packages: write   # necessário para publicar pacotes Maven no GitHub Packages
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      packages: write
+      contents: write   # necessário para criar releases, commit graph etc.
+      packages: write   # necessário para fazer upload no Maven GitHub Packages
 
     steps:
-      - name: 📥 Checkout
+      - name: 📥 Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: ⚙️ JDK 17 + cache Maven
+      - name: ⚙️ Configurar JDK 17 + cache Maven
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
-      - name: 🛠️ Build com testes
+      - name: 🛠️ Compilar e executar testes
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
           set -e
           if [ -n "${{ github.event.inputs.module_gav }}" ]; then
-            echo ">> Build do módulo ${{ github.event.inputs.module_gav }} (com testes)"
+            echo ">> Build apenas do módulo ${{ github.event.inputs.module_gav }}"
             mvn -B -V package -am -pl "${{ github.event.inputs.module_gav }}"
           else
-            echo ">> Build do projeto em $PWD (com testes)"
+            echo ">> Build do projeto completo em $PWD"
             mvn -B -V package
           fi
 
       - name: 📦 Listar artefatos gerados
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
-          echo "== Pastas target =="
+          echo "== Pastas target encontradas =="
           find . -type d -name target -print || true
-          echo "== JAR/WAR encontrados =="
+          echo "== Arquivos JAR/WAR encontrados =="
           find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
 
-      - name: 🧪 Upload de relatórios de teste (Surefire/FailSafe)
+      - name: 🧪 Upload de relatórios de teste (Surefire/Failsafe)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -68,7 +68,7 @@ jobs:
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
           if-no-files-found: ignore
 
-      - name: 📤 Publicar artefatos (JAR/WAR) para download
+      - name: 📤 Upload de artefatos gerados (JAR/WAR) para download
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
@@ -77,14 +77,14 @@ jobs:
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.war
           if-no-files-found: warn
 
-      - name: 📊 Enviar snapshot de dependências
+      - name: 📊 Enviar snapshot de dependências para Dependabot/Graph
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
         uses: advanced-security/maven-dependency-submission-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 🔐 Criar settings.xml só quando houver deploy (push/workflow_dispatch)
-      - name: 🔐 Criar settings.xml para GitHub Packages
+      # 🔐 Criar settings.xml com credenciais para deploy no GitHub Packages
+      - name: 🔐 Configurar credenciais Maven (settings.xml)
         if: github.event_name != 'pull_request'
         run: |
           mkdir -p ~/.m2
@@ -93,31 +93,29 @@ jobs:
             <servers>
               <server>
                 <id>github</id>
-                <username>${env.GH_USER}</username>
-                <password>${env.GH_TOKEN}</password>
+                <username>${env.GITHUB_ACTOR}</username>
+                <password>${env.GITHUB_TOKEN}</password>
               </server>
             </servers>
           </settings>
           XML
         env:
-          GH_USER: ${{ github.actor }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🔎 Conferir settings.xml (debug)
+      - name: 🔎 Verificar se settings.xml foi criado
         if: github.event_name != 'pull_request'
         run: |
-          ls -la ~/.m2 || true
+          ls -la ~/.m2
           test -f ~/.m2/settings.xml || (echo "ERRO: ~/.m2/settings.xml não existe" && exit 1)
 
-      # ✅ Deploy no GitHub Packages
-      - name: 🚀 Deploy no GitHub Packages
+      # 🚀 Deploy do artefato Maven no GitHub Packages
+      - name: 🚀 Deploy no GitHub Packages (Maven Repository)
         if: github.event_name != 'pull_request'
         working-directory: ${{ github.event.inputs.project_dir }}
         env:
-          GH_USER: ${{ github.actor }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          OWNER_REPO="${{ github.repository }}"    # ex: user/repo
+          OWNER_REPO="${{ github.repository }}"    # ex: usuario/repositorio
           mvn -B -V -s ~/.m2/settings.xml \
             -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${OWNER_REPO} \
             deploy
