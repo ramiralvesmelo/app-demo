@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: CI Java com Maven
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# Permissões padrão do workflow (podem ser read)
+# Permissões padrão do workflow (nível global)
 permissions:
   contents: read
 
@@ -14,26 +14,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Para o envio do snapshot, este job precisa de write
+    # Este job precisa de permissão de escrita
+    # para enviar o snapshot do grafo de dependências
     permissions:
       contents: write
 
     steps:
+      # 📥 Faz o checkout do código-fonte
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      # ⚙️ Configura o JDK 17 com cache do Maven
+      - name: Configurar JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven
+      # 🏗️ Compila o projeto com Maven
+      - name: Compilar com Maven
         run: mvn -B package --file pom.xml
 
-      # Submete o snapshot do grafo de dependências
-      # Evita rodar em PRs de fork (onde o token é limitado)
-      - name: Submit dependency graph snapshot
+      # 📊 Submete o snapshot do grafo de dependências
+      # Isso permite que o GitHub identifique vulnerabilidades
+      # e exiba o Dependency Graph no repositório.
+      # 🚫 Não executa em PRs vindos de forks (token limitado).
+      - name: Enviar snapshot de dependências
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
         uses: advanced-security/maven-dependency-submission-action@v4
         with:
