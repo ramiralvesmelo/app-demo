@@ -160,27 +160,38 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.12</version>
         <executions>
-            <!-- injeta o agente ANTES dos testes -->
+            <!-- injeta o agente antes dos testes -->
             <execution>
             <id>prepare-agent</id>
             <goals>
                 <goal>prepare-agent</goal>
             </goals>
-            <!-- gera property ${argLine} usada pelo Surefire -->
-            <configuration>
-                <append>true</append>
-            </configuration>
             </execution>
 
-            <!-- gera relatório em XML/HTML no 'verify' -->
+            <!-- gera relatórios -->
             <execution>
             <id>report</id>
             <phase>verify</phase>
             <goals>
                 <goal>report</goal>
             </goals>
+            <configuration>
+                <excludes>
+                <!-- Classe principal do Spring Boot -->
+                <exclude>**/*Application.class</exclude>
+                <!-- Classes de configuração -->
+                <exclude>**/*Config.class</exclude>
+                <exclude>**/*Configuration.class</exclude>
+                <!-- DTOs de request/response -->
+                <exclude>**/*Request.class</exclude>
+                <exclude>**/*Response.class</exclude>
+                <!-- Exceptions customizadas -->
+                <exclude>**/*Exception.class</exclude>
+                <!-- Enums (geralmente não precisam de teste unitário) -->
+                <exclude>**/*Enum.class</exclude>
+                </excludes>
+            </configuration>
             </execution>
-           
         </executions>
         </plugin>
 
