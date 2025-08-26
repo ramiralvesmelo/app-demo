@@ -5,10 +5,17 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  # Permite executar manualmente pelo GitHub
-  workflow_dispatch:    
+  workflow_dispatch:
+    inputs:
+      project_dir:
+        description: "Diretório do projeto (ex.: app/ ou . para raiz)"
+        required: false
+        default: "."
+      module_gav:
+        description: "GAV do módulo alvo (ex.: :app-demo). Deixe vazio para build completo"
+        required: false
+        default: ""
 
-# Permissões padrão do workflow (nível global)
 permissions:
   contents: read
 
@@ -16,32 +23,78 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Este job precisa de permissão de escrita
-    # para enviar o snapshot do grafo de dependências
+    # precisa de write para enviar o grafo de dependências
     permissions:
       contents: write
 
     steps:
-      # 📥 Faz o checkout do código-fonte
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
-      # ⚙️ Configura o JDK 17 com cache do Maven
-      - name: Configurar JDK 17
+      - name: ⚙️ JDK 17 + cache Maven
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
-      # 🏗️ Compila o projeto com Maven
-      - name: Compilar com Maven
-        run: mvn -B package --file pom.xml
+      # (Opcional) Habilite se usar repositório privado:
+      # - name: 📄 Configurar settings.xml (opcional)
+      #   run: |
+      #     mkdir -p ~/.m2
+      #     cat > ~/.m2/settings.xml <<'XML'
+      #     <settings>
+      #       <servers>
+      #         <server><id>nexus</id><username>${env.NEXUS_USER}</username><password>${env.NEXUS_PASS}</password></server>
+      #       </servers>
+      #       <mirrors>
+      #         <mirror><id>nexus</id><mirrorOf>*</mirrorOf><url>https://seu-nexus/repository/maven-all/</url></mirror>
+      #       </mirrors>
+      #     </settings>
+      #     XML
+      #   env:
+      #     NEXUS_USER: ${{ secrets.NEXUS_USER }}
+      #     NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
 
-      # 📊 Submete o snapshot do grafo de dependências
-      # Isso permite que o GitHub identifique vulnerabilidades
-      # e exiba o Dependency Graph no repositório.
-      # 🚫 Não executa em PRs vindos de forks (token limitado).
-      - name: Enviar snapshot de dependências
+      - name: 🏗️ Build com testes (raiz, subpasta ou módulo)
+        working-directory: ${{ github.event.inputs.project_dir }}
+        run: |
+          set -e
+          if [ -n "${{ github.event.inputs.module_gav }}" ]; then
+            echo ">> Build do módulo ${{ github.event.inputs.module_gav }} (com testes)"
+            mvn -B -V package -am -pl "${{ github.event.inputs.module_gav }}"
+          else
+            echo ">> Build do projeto em $PWD (com testes)"
+            mvn -B -V package
+          fi
+
+      - name: 📦 Listar artefatos gerados
+        working-directory: ${{ github.event.inputs.project_dir }}
+        run: |
+          echo "== Conteúdo de target =="
+          find . -name target -type d -print -exec ls -l {} \; || true
+
+      - name: 🧪 Upload de relatórios de teste (Surefire/FailSafe)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-test-reports
+          path: |
+            ${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
+            ${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
+          if-no-files-found: ignore
+
+      - name: 📤 Publicar artefatos (JAR/WAR) para download
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-targets
+          path: |
+            ${{ github.event.inputs.project_dir }}/**/target/*.jar
+            ${{ github.event.inputs.project_dir }}/**/target/*.war
+          if-no-files-found: warn
+
+      - name: 📊 Enviar snapshot de dependências
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
         uses: advanced-security/maven-dependency-submission-action@v4
         with:
