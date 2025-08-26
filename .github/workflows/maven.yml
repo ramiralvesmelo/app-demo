@@ -85,13 +85,12 @@ jobs:
           if-no-files-found: ignore
 
       - name: 📤 Publicar artefatos (JAR/WAR) para download
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
           path: |
-            ${{ github.event.inputs.project_dir }}/**/target/*.jar
-            ${{ github.event.inputs.project_dir }}/**/target/*.war
+            **/target/*.jar
+            **/target/*.war
           if-no-files-found: warn
 
       - name: 📊 Enviar snapshot de dependências
