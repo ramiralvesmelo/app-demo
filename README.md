@@ -1,5 +1,12 @@
 # 📘 App Demo ERP
 
+[![Build Status](https://github.com/ramiralvesmelo/app-demo/actions/workflows/maven.yml/badge.svg)](https://github.com/ramiralvesmelo/app-demo/actions/workflows/maven.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.springframework.boot/spring-boot-starter.svg?logo=apache-maven)](https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter)
+[![Java](https://img.shields.io/badge/Java-11-blue.svg?logo=java)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Coverage Status](https://img.shields.io/codecov/c/github/ramiralvesmelo/app-demo?logo=codecov)](https://app.codecov.io/gh/ramiralvesmelo/app-demo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Aplicação de demonstração de um sistema ERP simplificado, desenvolvida em **Spring Boot 2.7**, com **Hibernate (JPA)**, **validação de dados** e banco em memória **H2**.
 
 Este projeto foi criado como **base de estudo** e para demonstrar **boas práticas em arquitetura Java**, **persistência de dados** e **testes automatizados**.
