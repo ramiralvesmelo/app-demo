@@ -7,26 +7,34 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/ramiralvesmelo/app-demo?logo=codecov)](https://app.codecov.io/gh/ramiralvesmelo/app-demo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Aplicação de demonstração de um sistema ERP simplificado, desenvolvida em **Spring Boot 2.7**, com **Hibernate (JPA)**, **validação de dados** e banco em memória **H2**.
+📘 **Aplicação de Demonstração ERP**
 
-Este projeto foi criado como **base de estudo** e para demonstrar **boas práticas em arquitetura Java**, **persistência de dados** e **testes automatizados**.
+Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base de estudo para **boas práticas em Java**.
 
----
+### 🚀 Objetivos
 
-## 🚀 Tecnologias Utilizadas
+* Demonstrar uma arquitetura em camadas bem definida (**Controller**, **Service**, **Repository**, **Model**).
+* Expor APIs **RESTful** com validação de entrada e tratamento centralizado de erros.
+* Utilizar **JPA/Hibernate** para persistência e mapeamento objeto-relacional.
+* Garantir qualidade através de **testes automatizados** (unitários e de integração) com **JUnit 5** e **Mockito**.
+* Implementar **Integração Contínua** com **GitHub Actions**.
+* Monitorar **cobertura de código** com **Codecov**.
+* Automatizar a **publicação de binários** no **GitHub Packages**.
 
-* **Java 11**
-* **Spring Boot 2.7.18**
+### 🛠️ Tecnologias
 
-  * Spring Web
-  * Spring Data JPA
-  * Spring Validation
-* **H2 Database (runtime)**
-* **Hibernate ORM**
-* **Lombok**
-* **JUnit 4 e 5**
-* **Mockito**
-* **Maven 3.8+**
+* Spring Boot (Web, Data JPA, Validation)
+* Hibernate + **H2** em memória
+* Lombok
+* JUnit 5 + Mockito
+* GitHub Actions + Codecov
+* Maven
+
+### 📌 Funcionalidades
+
+* CRUD de **Clientes** e **Pedidos** com itens.
+* Cálculo de totais e regras simples (finalizar/cancelar).
+* Validações de dados e mensagens de erro customizadas.
 
 ---
 
