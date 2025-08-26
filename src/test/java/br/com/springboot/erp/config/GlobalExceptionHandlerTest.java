@@ -1,6 +1,7 @@
-package br.com.springboot.erp.config;
+	package br.com.springboot.erp.config;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +13,8 @@ import javax.validation.constraints.Positive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,4 +76,17 @@ class GlobalExceptionHandlerTest {
            .andExpect(jsonPath("$.error").value("Bad Request"))
            .andExpect(jsonPath("$.path").value("/ex/not-valid"));
     }
+    
+    @Test
+    void handleIllegalArgument_directCall() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setRequestURI("/ex/illegal");
+
+        ResponseEntity<?> resp = handler.handleIllegalArgument(
+                new IllegalArgumentException("mensagem direta"), req);
+
+        assertEquals(400, resp.getStatusCodeValue());
+        // opcional: validar campos do ErrorResponse via cast
+    }    
 }
