@@ -21,7 +21,7 @@ permissions:
   packages: write   # necessário para publicar pacotes Maven no GitHub Packages
 
 jobs:
-  build:
+  construir:
     runs-on: ubuntu-latest
     permissions:
       contents: write   # necessário para criar releases, commit graph etc.
@@ -49,6 +49,16 @@ jobs:
             echo ">> Build do projeto completo em $PWD"
             mvn -B -V package
           fi
+
+      - name: Run tests with coverage
+        run: mvn test jacoco:report
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}   # pode ser omitido em repositórios públicos
+          files: target/site/jacoco/jacoco.xml
+          fail_ci_if_error: true
 
       - name: 📦 Listar artefatos gerados
         working-directory: ${{ github.event.inputs.project_dir }}
