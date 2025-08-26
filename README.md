@@ -20,6 +20,8 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 * Implementar **Integração Contínua** com **GitHub Actions**.
 * Monitorar **cobertura de código** com **Codecov**.
 * Automatizar a **publicação de binários** no **GitHub Packages**.
+* Alimentar o **GitHub Dependency Graph** e **Dependabot alerts** via *dependency snapshot* no pipeline (Maven).
+* Publicar **relatórios de teste JUnit** (Surefire/Failsafe) como artefatos do CI para inspeção e auditoria.
 
 ### 🛠️ Tecnologias
 
