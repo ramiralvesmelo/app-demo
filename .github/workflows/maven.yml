@@ -38,7 +38,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: 🛠️ Build com testes (raiz, subpasta ou módulo)
+      - name: 🛠️ Build com testes
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
           set -e
@@ -114,7 +114,8 @@ jobs:
         if: github.event_name != 'pull_request'
         working-directory: ${{ github.event.inputs.project_dir }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           OWNER_REPO="${{ github.repository }}"    # ex: user/repo
           mvn -B -V -s ~/.m2/settings.xml \
