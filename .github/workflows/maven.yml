@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: write   # <-- importante: sem isso o job perde o packages:write
 
     steps:
       - name: 📥 Checkout
@@ -36,10 +37,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-          server-id: github                       # <id> usado no deploy
-          server-username: GITHUB_ACTOR           # setado pelo runner
-          server-password: GITHUB_TOKEN           # usa o token padrão
-          settings-path: ~/.m2                    # escreve ~/.m2/settings.xml
+          server-id: github
+          server-username: ${{ github.actor }}          # <- expressão correta
+          server-password: ${{ secrets.GITHUB_TOKEN }}  # <- expressão correta
+          settings-path: ~/.m2
 
       - name: 🏗️ Build com testes (raiz, subpasta ou módulo)
         working-directory: ${{ github.event.inputs.project_dir }}
@@ -66,7 +67,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maven-test-reports
-          # ⬇️ ANCORADO no diretório do projeto (não sobe para /)
           path: |
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
@@ -76,7 +76,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
-          # ⬇️ Também ancorado no projeto — evita varrer /boot/efi
           path: |
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.jar
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.war
@@ -88,6 +87,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 🔎 Conferir settings.xml (debug)
+        run: |
+          ls -la ~/.m2 || true
+          test -f ~/.m2/settings.xml || (echo "ERRO: ~/.m2/settings.xml não existe" && exit 1)
+
       # ✅ Deploy no GitHub Packages sem mexer no POM
       # Requer repository: https://maven.pkg.github.com/<owner>/<repo>
       - name: 🚀 Deploy no GitHub Packages
@@ -96,8 +100,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Usa o <server> 'github' gerado pelo setup-java no settings.xml
-          # e aponta o repositório com -DaltDeploymentRepository
           OWNER_REPO="${{ github.repository }}"    # ex: user/repo
           mvn -B -V -s ~/.m2/settings.xml \
             -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${OWNER_REPO} \
