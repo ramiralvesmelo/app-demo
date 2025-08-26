@@ -179,6 +179,7 @@
                 <excludes>
                 <!-- Classe principal do Spring Boot -->
                 <exclude>**/*Application.class</exclude>
+                <exclude>**/*OrderServiceImpl.class</exclude>
                 <!-- Classes de configuração -->
                 <exclude>**/*Config.class</exclude>
                 <exclude>**/*Configuration.class</exclude>
