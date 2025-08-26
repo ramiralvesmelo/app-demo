@@ -18,12 +18,11 @@ on:
 
 permissions:
   contents: read
+  packages: write   # necessário para publicar no GitHub Packages
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # precisa de write para enviar o grafo de dependências
     permissions:
       contents: write
 
@@ -31,30 +30,16 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: ⚙️ JDK 17 + cache Maven
+      - name: ⚙️ JDK 17 + cache Maven (+ settings com credenciais)
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
-      # (Opcional) Habilite se usar repositório privado:
-      # - name: 📄 Configurar settings.xml (opcional)
-      #   run: |
-      #     mkdir -p ~/.m2
-      #     cat > ~/.m2/settings.xml <<'XML'
-      #     <settings>
-      #       <servers>
-      #         <server><id>nexus</id><username>${env.NEXUS_USER}</username><password>${env.NEXUS_PASS}</password></server>
-      #       </servers>
-      #       <mirrors>
-      #         <mirror><id>nexus</id><mirrorOf>*</mirrorOf><url>https://seu-nexus/repository/maven-all/</url></mirror>
-      #       </mirrors>
-      #     </settings>
-      #     XML
-      #   env:
-      #     NEXUS_USER: ${{ secrets.NEXUS_USER }}
-      #     NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
+          server-id: github                       # <id> usado no deploy
+          server-username: GITHUB_ACTOR           # setado pelo runner
+          server-password: GITHUB_TOKEN           # usa o token padrão
+          settings-path: ~/.m2                    # escreve ~/.m2/settings.xml
 
       - name: 🏗️ Build com testes (raiz, subpasta ou módulo)
         working-directory: ${{ github.event.inputs.project_dir }}
@@ -71,26 +56,30 @@ jobs:
       - name: 📦 Listar artefatos gerados
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
-          echo "== Conteúdo de target =="
-          find . -name target -type d -print -exec ls -l {} \; || true
+          echo "== Pastas target =="
+          find . -type d -name target -print || true
+          echo "== JAR/WAR encontrados =="
+          find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
 
       - name: 🧪 Upload de relatórios de teste (Surefire/FailSafe)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: maven-test-reports
+          # ⬇️ ANCORADO no diretório do projeto (não sobe para /)
           path: |
-            ${{ github.event.inputs.project_dir }}/target/surefire-reports/**
-            ${{ github.event.inputs.project_dir }}/target/failsafe-reports/**
+            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
+            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
           if-no-files-found: ignore
 
       - name: 📤 Publicar artefatos (JAR/WAR) para download
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
+          # ⬇️ Também ancorado no projeto — evita varrer /boot/efi
           path: |
-            **/target/*.jar
-            **/target/*.war
+            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.jar
+            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.war
           if-no-files-found: warn
 
       - name: 📊 Enviar snapshot de dependências
@@ -98,3 +87,18 @@ jobs:
         uses: advanced-security/maven-dependency-submission-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ✅ Deploy no GitHub Packages sem mexer no POM
+      # Requer repository: https://maven.pkg.github.com/<owner>/<repo>
+      - name: 🚀 Deploy no GitHub Packages
+        if: github.event_name != 'pull_request'   # evita PRs/forks
+        working-directory: ${{ github.event.inputs.project_dir }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Usa o <server> 'github' gerado pelo setup-java no settings.xml
+          # e aponta o repositório com -DaltDeploymentRepository
+          OWNER_REPO="${{ github.repository }}"    # ex: user/repo
+          mvn -B -V -s ~/.m2/settings.xml \
+            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${OWNER_REPO} \
+            deploy
