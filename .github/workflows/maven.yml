@@ -80,8 +80,8 @@ jobs:
         with:
           name: maven-test-reports
           path: |
-            ${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
-            ${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
+            ${{ github.event.inputs.project_dir }}/target/surefire-reports/**
+            ${{ github.event.inputs.project_dir }}/target/failsafe-reports/**
           if-no-files-found: ignore
 
       - name: 📤 Publicar artefatos (JAR/WAR) para download
