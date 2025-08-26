@@ -25,24 +25,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write   # <-- importante: sem isso o job perde o packages:write
+      packages: write
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: ⚙️ JDK 17 + cache Maven (+ settings com credenciais)
+      - name: ⚙️ JDK 17 + cache Maven
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-          server-id: github
-          server-username: ${{ github.actor }}          # <- expressão correta
-          server-password: ${{ secrets.GITHUB_TOKEN }}  # <- expressão correta
-          settings-path: ~/.m2
 
-      - name: 🏗️ Build com testes (raiz, subpasta ou módulo)
+      - name: 🛠️ Build com testes (raiz, subpasta ou módulo)
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
           set -e
@@ -87,15 +83,35 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 🔐 Criar settings.xml só quando houver deploy (push/workflow_dispatch)
+      - name: 🔐 Criar settings.xml para GitHub Packages
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<'XML'
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${env.GH_USER}</username>
+                <password>${env.GH_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          XML
+        env:
+          GH_USER: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 🔎 Conferir settings.xml (debug)
+        if: github.event_name != 'pull_request'
         run: |
           ls -la ~/.m2 || true
           test -f ~/.m2/settings.xml || (echo "ERRO: ~/.m2/settings.xml não existe" && exit 1)
 
-      # ✅ Deploy no GitHub Packages sem mexer no POM
-      # Requer repository: https://maven.pkg.github.com/<owner>/<repo>
+      # ✅ Deploy no GitHub Packages
       - name: 🚀 Deploy no GitHub Packages
-        if: github.event_name != 'pull_request'   # evita PRs/forks
+        if: github.event_name != 'pull_request'
         working-directory: ${{ github.event.inputs.project_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
