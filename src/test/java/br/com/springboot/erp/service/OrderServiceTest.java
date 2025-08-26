@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -401,6 +402,46 @@ public class OrderServiceTest {
         // act -> deve lançar IllegalStateException
         orderService.finalizeOrder(1L);
     }
+    
+    @Test
+    public void deveRetornarOrderQuandoExiste() {
+        // arrange
+        order.setOrderNumber("ORD-123");
+        when(entityManager.createQuery(anyString(), eq(Order.class))).thenReturn(typedQuery);
+        when(typedQuery.setParameter(eq("orderNumber"), eq("ORD-123"))).thenReturn(typedQuery);
+        when(typedQuery.getSingleResult()).thenReturn(order);
+
+        // act
+        Optional<Order> result = orderService.findOrderByNumber("ORD-123");
+
+        // assert
+        assertTrue(result.isPresent());
+        assertEquals("ORD-123", result.get().getOrderNumber());
+
+        verify(entityManager, times(1)).createQuery(anyString(), eq(Order.class));
+        verify(typedQuery, times(1)).setParameter("orderNumber", "ORD-123");
+        verify(typedQuery, times(1)).getSingleResult();
+    }
+
+
+    @Test
+    public void deveRetornarOptionalVazioQuandoNaoExiste() {
+        // arrange
+        when(entityManager.createQuery(anyString(), eq(Order.class))).thenReturn(typedQuery);
+        when(typedQuery.setParameter(eq("orderNumber"), eq("ORD-XYZ"))).thenReturn(typedQuery);
+        // pode ser NoResultException; para evitar import extra, RuntimeException já serve
+        when(typedQuery.getSingleResult()).thenThrow(new RuntimeException("não encontrado"));
+
+        // act
+        Optional<Order> result = orderService.findOrderByNumber("ORD-XYZ");
+
+        // assert
+        assertTrue(result.isEmpty());
+
+        verify(entityManager, times(1)).createQuery(anyString(), eq(Order.class));
+        verify(typedQuery, times(1)).setParameter("orderNumber", "ORD-XYZ");
+        verify(typedQuery, times(1)).getSingleResult();
+    }   
 
     
 }
