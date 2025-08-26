@@ -50,10 +50,10 @@ jobs:
             mvn -B -V package
           fi
 
-      - name: Run tests with coverage
+      - name: Executar Teste e Gerar Relatório de Cobertura (JaCoCo)
         run: mvn test jacoco:report
 
-      - name: Upload coverage to Codecov
+      - name: Atualizar cobertura de código no Codecov
         uses: codecov/codecov-action@v4
         with:
           #token: ${{ secrets.CODECOV_TOKEN }}   # pode ser omitido em repositórios públicos
