@@ -37,8 +37,6 @@ import br.com.springboot.erp.model.OrderItem;
 import br.com.springboot.erp.model.Product;
 import br.com.springboot.erp.repository.CustomerRepository;
 import br.com.springboot.erp.repository.ProductRepository;
-import br.com.springboot.erp.service.OrderServiceImpl;
-import br.com.springboot.erp.service.ProductService;
 
 /**
  * Testes unitários para o {@link OrderServiceImpl}.
@@ -342,4 +340,67 @@ public class OrderServiceTest {
         // Executa o método - deve lançar IllegalArgumentException
         orderService.createOrder(999L, new ArrayList<>());
     }
+    
+ // já existe em OrderServiceTest, mas fica aqui o caminho feliz focado no método:
+    @Test
+    public void testCalculateOrderTotal_ok() {
+        Order mockOrder = mock(Order.class);
+        when(mockOrder.calculateTotal()).thenReturn(new BigDecimal("20.00"));
+        when(entityManager.find(eq(Order.class), eq(1L))).thenReturn(mockOrder);
+
+        BigDecimal total = orderService.calculateOrderTotal(1L);
+
+        assertEquals(new BigDecimal("20.00"), total);
+        verify(entityManager, times(1)).find(Order.class, 1L);
+        verify(mockOrder, times(1)).calculateTotal();
+    }
+
+    // ➕ caminho de erro que faltava: pedido não encontrado
+    @Test(expected = IllegalArgumentException.class)
+    public void testCalculateOrderTotal_orderNaoEncontrado() {
+        when(entityManager.find(eq(Order.class), eq(999L))).thenReturn(null);
+
+        orderService.calculateOrderTotal(999L);
+        // espera IllegalArgumentException: "Pedido não encontrado"
+    }
+    
+    @Test
+    public void testFinalizeOrder_ok() {
+        // arrange: o setUp() já criou order com 1 item (qty=2, subtotal=20.00) e product stock=100
+        when(entityManager.find(eq(Order.class), eq(1L))).thenReturn(order);
+
+        // act
+        orderService.finalizeOrder(1L);
+
+        // assert: total e status
+        assertEquals(new BigDecimal("20.00"), order.getTotalAmount());
+        assertEquals(br.com.springboot.erp.model.Status.FINALIZADO, order.getStatus());
+
+        // assert: estoque baixado (100 - 2 = 98)
+        assertEquals(Integer.valueOf(98), product.getStock());
+
+        // assert: merges executados (1 product + 1 order)
+        verify(entityManager, times(1)).merge(product);
+        verify(entityManager, times(1)).merge(order);
+    }
+    
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFinalizeOrder_orderNaoEncontrado() {
+        when(entityManager.find(eq(Order.class), eq(999L))).thenReturn(null);
+
+        orderService.finalizeOrder(999L);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testFinalizeOrder_estoqueInsuficiente() {
+        // arrange: força estoque menor que a quantidade do item
+        product.setStock(1);                // qty do item no setUp() é 2
+        when(entityManager.find(eq(Order.class), eq(1L))).thenReturn(order);
+
+        // act -> deve lançar IllegalStateException
+        orderService.finalizeOrder(1L);
+    }
+
+    
 }
