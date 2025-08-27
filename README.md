@@ -121,12 +121,21 @@ app-demo
 
 ---
 
-## ⚡ Integração Contínua (CI/CD)
+## 🔐 Secrets necessários
 
-O projeto conta com um workflow configurado no **GitHub Actions** 
+* **SONAR\_TOKEN** → gerado em **SonarCloud → My Account → Security**.
+* **CODECOV\_TOKEN** → gerado no **Codecov** (recomendado para a action v4).
+* **GITHUB\_TOKEN** → já fornecido automaticamente pelo **GitHub Actions** (não precisa criar).
+
+### ⚠️ Atenção:
+
+Esse passo deve ser usado apenas se o projeto estiver configurado com **"CI-based Analysis"** no SonarCloud.
+Se o modo **"Automatic Analysis (AutoScan)"** estiver ativo, a execução do `sonar:sonar` irá falhar.
+Para usar este passo, vá em **SonarCloud → Administration → Analysis Method** e troque de *AutoScan* para *CI-based*.
+
+---
 
 📍 Configurações de segurança e análise podem ser ajustadas em:
-
 👉 [GitHub Settings - Security Analysis](https://github.com/ramiralvesmelo/app-demo/settings/security_analysis)
 
 ---
