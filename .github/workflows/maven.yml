@@ -1,18 +1,18 @@
 name: CI Java com Maven
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
   workflow_dispatch:
     inputs:
       project_dir:
-        description: "Diretório do projeto (ex.: app/ ou . para raiz)"
+        description: "Em caso de projetos multi-módulos, valor padrão raiz do projeto."
         required: false
-        default: "."
+        default: "."	  	
       module_gav:
-        description: "GAV do módulo alvo (ex.: :app-demo). Deixe vazio para build completo"
+        description: "GAV (GroupId, ArtifactId, Version), valor padrão compila todos módulos."
         required: false
         default: ""
 
@@ -50,10 +50,10 @@ jobs:
             mvn -B -V package
           fi
 
-# ⚠️ Atenção:
-# Esse passo deve ser usado apenas se o projeto estiver configurado com "CI-based Analysis" no SonarCloud.
-# Se o modo "Automatic Analysis (AutoScan)"estiver ativo, a execução do sonar:sonar irá falhar.
-# Para usar este passo, vá em SonarCloud → Administration → Analysis Method e troque de AutoScan para CI-based.
+#######	⚠️ Atenção:
+#######	Esse passo deve ser usado apenas se o projeto estiver configurado com "CI-based Analysis" no SonarCloud.
+#######	Se o modo "Automatic Analysis (AutoScan)"estiver ativo, a execução do sonar:sonar irá falhar.
+#######	Para usar este passo, vá em SonarCloud → Administration → Analysis Method e troque de AutoScan para CI-based.
 #      - name: 🔎 SonarCloud Scan (Maven)
 #        working-directory: ${{ github.event.inputs.project_dir }}
 #        env:
@@ -75,15 +75,7 @@ jobs:
           #token: ${{ secrets.CODECOV_TOKEN }}   # pode ser omitido em repositórios públicos
           files: target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
-
-      - name: 📦 Listar artefatos gerados
-        working-directory: ${{ github.event.inputs.project_dir }}
-        run: |
-          echo "== Pastas target encontradas =="
-          find . -type d -name target -print || true
-          echo "== Arquivos JAR/WAR encontrados =="
-          find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
-
+		  
       - name: 🧪 Upload de relatórios de teste (Surefire/Failsafe)
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,6 +85,23 @@ jobs:
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
             ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
           if-no-files-found: ignore
+
+      - name: 📦 Gerar SBOM (CycloneDX)
+        run: mvn -B cyclonedx:makeAggregateBom --no-transfer-progress
+      
+      - name: 📤 Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/bom.xml		  
+
+      - name: 📦 Listar artefatos gerados
+        working-directory: ${{ github.event.inputs.project_dir }}
+        run: |
+          #echo "== Pastas target encontradas =="
+          #find . -type d -name target -print || true
+          echo "== Arquivos JAR/WAR encontrados =="
+          find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
 
       - name: 📤 Upload de artefatos gerados (JAR/WAR) para download
         uses: actions/upload-artifact@v4
