@@ -11,7 +11,7 @@
 
 Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base de estudo para **boas práticas em Java**.
 
-### 🚀 Objetivos
+### 🎯 Objetivos
 
 * Demonstrar uma arquitetura em camadas bem definida (**Controller**, **Service**, **Repository**, **Model**).
 * Expor APIs **RESTful** com validação de entrada e tratamento centralizado de erros.
@@ -113,27 +113,12 @@ app-demo
 
 ---
 
-## 🎯 Objetivos do Projeto
-
-* Demonstrar a criação de uma aplicação **ERP modularizada**.
-* Expor **endpoints REST** para operações de CRUD em entidades como Cliente, Produto e Pedido.
-* Aplicar **boas práticas** em camadas de serviço e persistência.
-* Usar **testes automatizados** como parte do desenvolvimento.
-
----
-
 ## ⚡ Integração Contínua (CI/CD)
 
-O projeto conta com um workflow configurado no **GitHub Actions** (`.github/workflows/maven.yml`) que executa automaticamente:
-
-1. **Checkout do código**
-2. **Compilação e execução dos testes unitários e de integração**
-3. **Upload de relatórios de testes** como artefatos no GitHub Actions
-4. **Publicação dos artefatos JAR/WAR** para download direto do workflow
-5. **Envio do snapshot de dependências** para o **Dependency Graph** do GitHub
-6. **Deploy automático no GitHub Packages (Maven Repository)** em caso de push na branch `main`
+O projeto conta com um workflow configurado no **GitHub Actions** 
 
 📍 Configurações de segurança e análise podem ser ajustadas em:
+
 👉 [GitHub Settings - Security Analysis](https://github.com/ramiralvesmelo/app-demo/settings/security_analysis)
 
 ---
