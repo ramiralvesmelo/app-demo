@@ -49,18 +49,21 @@ jobs:
             echo ">> Build do projeto completo em $PWD"
             mvn -B -V -DskipTests=false clean verify jacoco:report
           fi
-
-      - name: 🔎 SonarCloud Scan (Maven)
-        working-directory: ${{ github.event.inputs.project_dir }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn -B sonar:sonar \
-            -Dsonar.projectKey=ramiralvesmelo_app-demo \
-            -Dsonar.organization=ramiralvesmelo \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=${SONAR_TOKEN} \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+# ⚠️ Atenção:
+# Esse passo deve ser usado apenas se o projeto estiver configurado com "CI-based Analysis" no SonarCloud.
+# Se o modo "Automatic Analysis (AutoScan)"estiver ativo, a execução do sonar:sonar irá falhar.
+# Para usar este passo, vá em SonarCloud → Administration → Analysis Method e troque de AutoScan para CI-based.
+#      - name: 🔎 SonarCloud Scan (Maven)
+#        working-directory: ${{ github.event.inputs.project_dir }}
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: |
+#          mvn -B sonar:sonar \
+#            -Dsonar.projectKey=ramiralvesmelo_app-demo \
+#            -Dsonar.organization=ramiralvesmelo \
+#            -Dsonar.host.url=https://sonarcloud.io \
+#            -Dsonar.token=${SONAR_TOKEN} \
+#            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: 📈 Enviar cobertura para Codecov
         uses: codecov/codecov-action@v4
