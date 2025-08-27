@@ -5,7 +5,12 @@
 [![Java](https://img.shields.io/badge/Java-11-blue.svg?logo=java)](https://adoptium.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ramiralvesmelo/app-demo?logo=codecov)](https://app.codecov.io/gh/ramiralvesmelo/app-demo)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ramiralvesmelo_app-demo&metric=alert_status)](https://sonarcloud.io/dashboard?id=ramiralvesmelo_app-demo)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ramiralvesmelo_app-demo&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=ramiralvesmelo_app-demo)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ramiralvesmelo_app-demo&metric=security_rating)](https://sonarcloud.io/dashboard?id=ramiralvesmelo_app-demo)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ramiralvesmelo_app-demo&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=ramiralvesmelo_app-demo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 📘 **Aplicação de Demonstração ERP**
 
