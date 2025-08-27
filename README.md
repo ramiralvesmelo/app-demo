@@ -25,6 +25,7 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 * 📊 **Integrar e monitorar cobertura de código** com **Codecov**.
 * 📦 **Automatizar publicação de binários** no **GitHub Packages**.
 * 📈 **Alimentar o GitHub Dependency Graph**.
+* 📄 **Gerar e publicar SBOM (Software Bill of Materials)**
 * 🚨 **Habilitar Dependabot Alerts** via **dependency snapshot** no pipeline (Maven).
 * 📑 **Publicar relatórios de teste JUnit** (Surefire/Failsafe) como artefatos do CI para inspeção e auditoria.
 * 🔍 **Analisar o projeto com SonarCloud** para qualidade, segurança e manutenibilidade do código.
@@ -95,15 +96,20 @@ Configuração padrão:
 
 ---
 
-## ✅ Testes
+## ✅ Comandos Maven
 
-O projeto inclui testes **unitários e de integração** utilizando **JUnit 4/5** e **Mockito**.
+Aqui está uma tabela organizada com os **plugins configurados no `pom.xml`**, suas fases e seus respectivos comandos manuais.
 
-Para rodar os testes:
+---
 
-```bash
-mvn test
-```
+| 🔌 Plugin                    | ⚡ Fase Maven (default)                         | ▶️ Comando Maven Manual                                      |
+| ---------------------------- | ---------------------------------------------- | ------------------------------------------------------------ |
+| **maven-resources-plugin**   | `process-resources` / `process-test-resources` | `mvn resources:resources` <br> `mvn resources:testResources` |
+| **maven-compiler-plugin**    | `compile` / `test-compile`                     | `mvn compiler:compile` <br> `mvn compiler:testCompile`       |
+| **spring-boot-maven-plugin** | `package` (reempacota JAR/WAR)                 | `mvn spring-boot:run` <br> `mvn spring-boot:repackage`       |
+| **jacoco-maven-plugin**      | `verify` (gera relatórios)                     | `mvn jacoco:prepare-agent` <br> `mvn jacoco:report`          |
+| **maven-surefire-plugin**    | `test`                                         | `mvn test` <br> `mvn surefire:test`                          |
+| **cyclonedx-maven-plugin**   | `verify`                                       | `mvn cyclonedx:makeAggregateBom`                             |
 
 ---
 
