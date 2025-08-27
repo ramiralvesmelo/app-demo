@@ -11,7 +11,7 @@ on:
         description: "GAV alvo (GroupId, ArtifactId, Version)"
         required: false
         default: ""
-		
+
 permissions:
   contents: read
   packages: write   # necessário para publicar pacotes Maven no GitHub Packages
