@@ -121,21 +121,28 @@ app-demo
 
 ---
 
-## 🔐 Secrets necessários
+## 🔐 Secrets
 
-* **SONAR\_TOKEN** → gerado em **SonarCloud → My Account → Security**.
-* **CODECOV\_TOKEN** → gerado no **Codecov** (recomendado para a action v4).
-* **GITHUB\_TOKEN** → já fornecido automaticamente pelo **GitHub Actions** (não precisa criar).
+* **SONAR\_TOKEN** → gerar em **SonarCloud → My Account → Security**
+* **CODECOV\_TOKEN** → gerar no **Codecov** (Action v4)
+* **GITHUB\_TOKEN** → já fornecido pelo **GitHub Actions**  
 
-### ⚠️ Atenção:
+### ⚠️ Atenção
 
-Esse passo deve ser usado apenas se o projeto estiver configurado com **"CI-based Analysis"** no SonarCloud.
-Se o modo **"Automatic Analysis (AutoScan)"** estiver ativo, a execução do `sonar:sonar` irá falhar.
-Para usar este passo, vá em **SonarCloud → Administration → Analysis Method** e troque de *AutoScan* para *CI-based*.
+O comando `sonar:sonar` **somente funciona no modo CI-based Analysis**.
+Se o projeto estiver em **AutoScan**, a execução **irá falhar**.
+
+### ✅ Como configurar a análise via pipeline
+
+1. No **SonarCloud**, acesse:
+   **Administration → Analysis Method → selecione CI-based Analysis**.
+2. Configure os segredos no repositório.
+3. Verifique se o método de análise está definido como **CI-based**.
+4. Execute o pipeline com `sonar:sonar`.
 
 ---
 
-📍 Configurações de segurança e análise podem ser ajustadas em:
+📍 Configurações de segurança e análise também podem ser ajustadas em:
 👉 [GitHub Settings - Security Analysis](https://github.com/ramiralvesmelo/app-demo/settings/security_analysis)
 
 ---
