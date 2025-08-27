@@ -13,30 +13,34 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 
 ### 🎯 Objetivos
 
-* Demonstrar uma arquitetura em camadas bem definida (**Controller**, **Service**, **Repository**, **Model**).
-* Expor APIs **RESTful** com validação de entrada e tratamento centralizado de erros.
-* Utilizar **JPA/Hibernate** para persistência e mapeamento objeto-relacional.
-* Garantir qualidade através de **testes automatizados** (unitários e de integração) com **JUnit 5** e **Mockito**.
-* Implementar **Integração Contínua** com **GitHub Actions**.
-* Monitorar **cobertura de código** com **Codecov**.
-* Automatizar a **publicação de binários** no **GitHub Packages**.
-* Alimentar o **GitHub Dependency Graph** e **Dependabot alerts** via *dependency snapshot* no pipeline (Maven).
-* Publicar **relatórios de teste JUnit** (Surefire/Failsafe) como artefatos do CI para inspeção e auditoria.
+## 📌 Itens de Implementação no Projeto
+
+* 🗄️ **Utilizar JPA/Hibernate** para persistência e mapeamento objeto-relacional.
+* ✅ **Garantir qualidade com testes automatizados** (unitários e de integração) utilizando **JUnit 5** e **Mockito**.
+* 🔄 **Implementar Integração Contínua** com **GitHub Actions**.
+* 📊 **Integrar e monitorar cobertura de código** com **Codecov**.
+* 📦 **Automatizar publicação de binários** no **GitHub Packages**.
+* 📈 **Alimentar o GitHub Dependency Graph** e **habilitar Dependabot alerts** via **dependency snapshot** no pipeline (Maven).
+* 📑 **Publicar relatórios de teste JUnit** (Surefire/Failsafe) como artefatos do CI para inspeção e auditoria.
+
+---
+
+👉 Sugestão: incluir **Badges no README** (build, cobertura, versão, qualidade do código) para dar mais visibilidade e profissionalismo ao repositório.
 
 ### 🛠️ Tecnologias
 
-* Spring Boot (Web, Data JPA, Validation)
-* Hibernate + **H2** em memória
-* Lombok
-* JUnit 5 + Mockito
-* GitHub Actions + Codecov
-* Maven
+* **Spring Boot 2.7.18**
 
-### 📌 Funcionalidades
-
-* CRUD de **Clientes** e **Pedidos** com itens.
-* Cálculo de totais e regras simples (finalizar/cancelar).
-* Validações de dados e mensagens de erro customizadas.
+  * Spring Web
+  * Spring Data JPA
+  * Spring Validation
+* **Hibernate ORM 5.6.15.Final**
+* **H2 Database 2.1.214** (runtime, em memória)
+* **Lombok 1.18.32**
+* **JUnit 5.9.3** + **Mockito 5.10.0**
+* **Maven 3.9.2**
+* **GitHub Actions** (CI/CD)
+* **Codecov** (monitoramento de cobertura de testes)
 
 ---
 
@@ -44,7 +48,7 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 
 * [Java 11+](https://adoptium.net/)
 * [Maven 3.8+](https://maven.apache.org/)
-* IDE recomendada: **Eclipse STS** ou **IntelliJ IDEA** com suporte a Spring Boot.
+* [Lombok plugin](https://projectlombok.org/setup/) instalado na IDE (**Eclipse STS** ou **IntelliJ IDEA**) para suporte às anotações.
 
 ---
 
@@ -131,4 +135,3 @@ Sinta-se livre para usar, modificar e compartilhar.
 ---
 
 👨‍💻 **Autor:** Ramir Alves
-📧 Contato: [ramiralves@gmail.com](mailto:ramiralves@gmail.com)
