@@ -71,7 +71,7 @@ jobs:
           #token: ${{ secrets.CODECOV_TOKEN }}   # pode ser omitido em repositórios públicos
           files: target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
-		  
+
       - name: 🧪 Upload de relatórios de teste (Surefire/Failsafe)
         if: always()
         uses: actions/upload-artifact@v4
