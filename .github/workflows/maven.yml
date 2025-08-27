@@ -82,9 +82,18 @@ jobs:
         with:
           name: maven-test-reports
           path: |
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
+            ${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
+            ${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
           if-no-files-found: ignore
+
+      - name: 📤 Upload de artefatos (JAR/WAR)
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-targets
+          path: |
+            ${{ github.event.inputs.project_dir }}/**/target/*.jar
+            ${{ github.event.inputs.project_dir }}/**/target/*.war
+          if-no-files-found: warn     
 
       - name: 📦 Gerar SBOM (CycloneDX)
         run: mvn -B cyclonedx:makeAggregateBom --no-transfer-progress
