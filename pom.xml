@@ -113,116 +113,128 @@
     </dependencies>
 
     <build>
-    <plugins>
-        <!-- resources -->
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-        </plugin>
-
-        <!-- compiler (apenas plugin e processor path; dependências intactas) -->
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-            <encoding>${project.build.sourceEncoding}</encoding>
-            <annotationProcessorPaths>
-            <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.38</version>
-            </path>
-            </annotationProcessorPaths>
-        </configuration>
-        </plugin>
-
-        <!-- spring-boot -->
-        <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-            <excludes>
-            <exclude>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-            </exclude>
-            </excludes>
-        </configuration>
-        </plugin>
-
-        <!-- JaCoCo: agente + relatório XML (necessário p/ Codecov/Sonar) -->
-        <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
-        <executions>
-            <!-- injeta o agente antes dos testes -->
-            <execution>
-            <id>prepare-agent</id>
-            <goals>
-                <goal>prepare-agent</goal>
-            </goals>
-            </execution>
-
-            <!-- gera relatórios -->
-            <execution>
-            <id>report</id>
-            <phase>verify</phase>
-            <goals>
-                <goal>report</goal>
-            </goals>
-            <configuration>
-                <excludes>
-                <!-- Classe principal do Spring Boot -->
-                <exclude>**/*Application.class</exclude>
-                <exclude>**/*OrderServiceImpl.class</exclude>
-                <!-- Classes de configuração -->
-                <exclude>**/*Config.class</exclude>
-                <exclude>**/*Configuration.class</exclude>
-                <!-- DTOs de request/response -->
-                <exclude>**/*Request.class</exclude>
-                <exclude>**/*Response.class</exclude>
-                <!-- Exceptions customizadas -->
-                <exclude>**/*Exception.class</exclude>
-                <!-- Enums (geralmente não precisam de teste unitário) -->
-                <exclude>**/*Enum.class</exclude>
-                </excludes>
-            </configuration>
-            </execution>
-        </executions>
-        </plugin>
-
-        <!-- surefire: JUnit 4/5/Vintage; preserva ${argLine} do JaCoCo -->
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
-        <configuration>
-            <useModulePath>false</useModulePath>
-
-            <!-- IMPORTANTE: começa com ${argLine} para não perder o JaCoCo -->
-            <argLine>
-            ${argLine}
-            --add-opens java.base/java.lang=ALL-UNNAMED
-            --add-opens java.base/java.util=ALL-UNNAMED
-            --add-opens java.base/java.io=ALL-UNNAMED
-            --add-opens java.base/java.net=ALL-UNNAMED
-            --add-opens java.base/java.lang.reflect=ALL-UNNAMED
-            </argLine>
-
-            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-            <printSummary>brief</printSummary>
-            <trimStackTrace>true</trimStackTrace>
-            <forkCount>1</forkCount>
-            <reuseForks>true</reuseForks>
-        </configuration>
-        </plugin>
-
-    </plugins>
-    </build>
-
+	    <plugins>
+	        <!-- resources -->
+	        <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-resources-plugin</artifactId>
+	        <version>3.3.1</version>
+	        </plugin>
+	
+	        <!-- compiler (apenas plugin e processor path; dependências intactas) -->
+	        <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <version>3.11.0</version>
+	        <configuration>
+	            <source>${maven.compiler.source}</source>
+	            <target>${maven.compiler.target}</target>
+	            <encoding>${project.build.sourceEncoding}</encoding>
+	            <annotationProcessorPaths>
+	            <path>
+	                <groupId>org.projectlombok</groupId>
+	                <artifactId>lombok</artifactId>
+	                <version>1.18.38</version>
+	            </path>
+	            </annotationProcessorPaths>
+	        </configuration>
+	        </plugin>
+	
+	        <!-- spring-boot -->
+	        <plugin>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-maven-plugin</artifactId>
+	        <configuration>
+	            <excludes>
+	            <exclude>
+	                <groupId>org.projectlombok</groupId>
+	                <artifactId>lombok</artifactId>
+	            </exclude>
+	            </excludes>
+	        </configuration>
+	        </plugin>
+	
+	        <!-- JaCoCo: agente + relatório XML (necessário p/ Codecov/Sonar) -->
+	        <plugin>
+	        <groupId>org.jacoco</groupId>
+	        <artifactId>jacoco-maven-plugin</artifactId>
+	        <version>0.8.12</version>
+	        <executions>
+	            <!-- injeta o agente antes dos testes -->
+	            <execution>
+	            <id>prepare-agent</id>
+	            <goals>
+	                <goal>prepare-agent</goal>
+	            </goals>
+	            </execution>
+	
+	            <!-- gera relatórios -->
+	            <execution>
+	            <id>report</id>
+	            <phase>verify</phase>
+	            <goals>
+	                <goal>report</goal>
+	            </goals>
+	            <configuration>
+	                <excludes>
+	                <!-- Classe principal do Spring Boot -->
+	                <exclude>**/*Application.class</exclude>
+	                <exclude>**/*OrderServiceImpl.class</exclude>
+	                <!-- Classes de configuração -->
+	                <exclude>**/*Config.class</exclude>
+	                <exclude>**/*Configuration.class</exclude>
+	                <!-- DTOs de request/response -->
+	                <exclude>**/*Request.class</exclude>
+	                <exclude>**/*Response.class</exclude>
+	                <!-- Exceptions customizadas -->
+	                <exclude>**/*Exception.class</exclude>
+	                <!-- Enums (geralmente não precisam de teste unitário) -->
+	                <exclude>**/*Enum.class</exclude>
+	                </excludes>
+	            </configuration>
+	            </execution>
+	        </executions>
+	        </plugin>
+	
+	        <!-- surefire: JUnit 4/5/Vintage; preserva ${argLine} do JaCoCo -->
+	        <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-surefire-plugin</artifactId>
+	        <version>3.2.5</version>
+	        <configuration>
+	            <useModulePath>false</useModulePath>
+	
+	            <!-- IMPORTANTE: começa com ${argLine} para não perder o JaCoCo -->
+	            <argLine>
+	            ${argLine}
+	            --add-opens java.base/java.lang=ALL-UNNAMED
+	            --add-opens java.base/java.util=ALL-UNNAMED
+	            --add-opens java.base/java.io=ALL-UNNAMED
+	            --add-opens java.base/java.net=ALL-UNNAMED
+	            --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+	            </argLine>
+	
+	            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+	            <printSummary>brief</printSummary>
+	            <trimStackTrace>true</trimStackTrace>
+	            <forkCount>1</forkCount>
+	            <reuseForks>true</reuseForks>
+	        </configuration>
+	        </plugin>
+			<!-- CycloneDX Maven Plugin -->
+			<plugin>
+			  <groupId>org.cyclonedx</groupId>
+			  <artifactId>cyclonedx-maven-plugin</artifactId>
+			  <version>2.9.0</version>
+			  <executions>
+			    <execution>
+			      <phase>verify</phase>
+			      <goals>
+			        <goal>makeAggregateBom</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+	    </plugins>
+	</build>
 </project>
