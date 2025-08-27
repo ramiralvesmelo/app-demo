@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       project_dir:
-        description: "Em caso de projetos multi-módulos, valor padrão raiz do projeto."
-        required: false
-        default: "."	  	
+        description: "Diretório do projeto"
+        required: true
+        default: "."
       module_gav:
-        description: "GAV (GroupId, ArtifactId, Version), valor padrão compila todos módulos."
+        description: "GAV alvo (GroupId, ArtifactId, Version)"
         required: false
         default: ""
 
