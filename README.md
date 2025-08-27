@@ -17,15 +17,18 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 
 ### 🎯 Objetivos
 
-## 📌 Itens de Implementação no Projeto
+## 📌 Objetivos/Pontos do Projeto
 
 * 🗄️ **Utilizar JPA/Hibernate** para persistência e mapeamento objeto-relacional.
 * ✅ **Garantir qualidade com testes automatizados** (unitários e de integração) utilizando **JUnit 5** e **Mockito**.
 * 🔄 **Implementar Integração Contínua** com **GitHub Actions**.
 * 📊 **Integrar e monitorar cobertura de código** com **Codecov**.
 * 📦 **Automatizar publicação de binários** no **GitHub Packages**.
-* 📈 **Alimentar o GitHub Dependency Graph** e **habilitar Dependabot alerts** via **dependency snapshot** no pipeline (Maven).
+* 📈 **Alimentar o GitHub Dependency Graph**.
+* 🚨 **Habilitar Dependabot Alerts** via **dependency snapshot** no pipeline (Maven).
 * 📑 **Publicar relatórios de teste JUnit** (Surefire/Failsafe) como artefatos do CI para inspeção e auditoria.
+* 🔍 **Analisar o projeto com SonarCloud** para qualidade, segurança e manutenibilidade do código.
+* 🏷️ **Exibir badges de status** (build, qualidade, cobertura, dependabot) no README de forma simplificada.
 
 ---
 
