@@ -98,12 +98,17 @@ jobs:
       - name: 📦 Gerar SBOM (CycloneDX)
         run: mvn -B cyclonedx:makeAggregateBom --no-transfer-progress
       
-      - name: 📤 Upload SBOM
+      - name: Upload SBOMs (CycloneDX)
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
-          path: ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/bom.xml		  
-
+          name: sbom-cyclonedx
+          path: |
+            ${{ github.workspace }}/target/bom.xml
+            ${{ github.workspace }}/target/bom.json
+            ${{ github.workspace }}/target/*-cyclonedx.xml
+            ${{ github.workspace }}/target/*-cyclonedx.json
+          if-no-files-found: error
+          
       - name: 📦 Listar artefatos gerados
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
