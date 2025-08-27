@@ -1,10 +1,6 @@
 name: CI Java com Maven
 
 on:
-  #push:
-  #  branches: [ "main" ]
-  #pull_request:
-  #  branches: [ "main" ]
   workflow_dispatch:
     inputs:
       project_dir:
@@ -15,7 +11,7 @@ on:
         description: "GAV alvo (GroupId, ArtifactId, Version)"
         required: false
         default: ""
-
+		
 permissions:
   contents: read
   packages: write   # necessário para publicar pacotes Maven no GitHub Packages
