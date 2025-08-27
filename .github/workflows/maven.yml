@@ -1,4 +1,4 @@
-name: CI Java com Maven
+name: Executar GitAction
 
 on:
   #push:
