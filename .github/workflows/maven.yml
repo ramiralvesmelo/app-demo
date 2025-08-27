@@ -2,9 +2,9 @@ name: CI Java com Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
     inputs:
       project_dir:
@@ -18,14 +18,14 @@ on:
 
 permissions:
   contents: read
-  packages: write   # necessário para publicar pacotes Maven no GitHub Packages
+  packages: write
 
 jobs:
   construir:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # necessário para criar releases, commit graph etc.
-      packages: write   # necessário para fazer upload no Maven GitHub Packages
+      contents: write
+      packages: write
 
     steps:
       - name: 📥 Checkout do repositório
@@ -38,34 +38,43 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: 🛠️ Compilar e executar testes
+      - name: 🛠️ Compilar e executar testes (gera JaCoCo)
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
           set -e
           if [ -n "${{ github.event.inputs.module_gav }}" ]; then
             echo ">> Build apenas do módulo ${{ github.event.inputs.module_gav }}"
-            mvn -B -V package -am -pl "${{ github.event.inputs.module_gav }}"
+            mvn -B -V -DskipTests=false -am -pl "${{ github.event.inputs.module_gav }}" clean verify jacoco:report
           else
             echo ">> Build do projeto completo em $PWD"
-            mvn -B -V package
+            mvn -B -V -DskipTests=false clean verify jacoco:report
           fi
 
-      - name: Executar Teste e Gerar Relatório de Cobertura (JaCoCo)
-        run: mvn test jacoco:report
+      - name: 🔎 SonarCloud Scan (Maven)
+        working-directory: ${{ github.event.inputs.project_dir }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn -B sonar:sonar \
+            -Dsonar.projectKey=ramiralvesmelo_app-demo \
+            -Dsonar.organization=ramiralvesmelo \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${SONAR_TOKEN} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
-      - name: Atualizar cobertura de código no Codecov
+      - name: 📈 Enviar cobertura para Codecov
         uses: codecov/codecov-action@v4
         with:
-          #token: ${{ secrets.CODECOV_TOKEN }}   # pode ser omitido em repositórios públicos
-          files: target/site/jacoco/jacoco.xml
+          token: ${{ secrets.CODECOV_TOKEN }} # recomendado mesmo em repo público
+          files: ${{ github.event.inputs.project_dir }}/target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
 
       - name: 📦 Listar artefatos gerados
         working-directory: ${{ github.event.inputs.project_dir }}
         run: |
-          echo "== Pastas target encontradas =="
+          echo "== Pastas target =="
           find . -type d -name target -print || true
-          echo "== Arquivos JAR/WAR encontrados =="
+          echo "== JAR/WAR encontrados =="
           find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
 
       - name: 🧪 Upload de relatórios de teste (Surefire/Failsafe)
@@ -74,27 +83,24 @@ jobs:
         with:
           name: maven-test-reports
           path: |
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
+            ${{ github.event.inputs.project_dir }}/**/target/surefire-reports/**
+            ${{ github.event.inputs.project_dir }}/**/target/failsafe-reports/**
           if-no-files-found: ignore
 
-      - name: 📤 Upload de artefatos gerados (JAR/WAR) para download
+      - name: 📤 Upload de artefatos (JAR/WAR)
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
           path: |
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.jar
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.war
+            ${{ github.event.inputs.project_dir }}/**/target/*.jar
+            ${{ github.event.inputs.project_dir }}/**/target/*.war
           if-no-files-found: warn
 
-      - name: 📊 Enviar snapshot de dependências para Dependabot/Graph
+      - name: 📊 Dependency Graph / Dependabot snapshot
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
         uses: advanced-security/maven-dependency-submission-action@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 🔐 Criar settings.xml com credenciais para deploy no GitHub Packages
-      - name: 🔐 Configurar credenciais Maven (settings.xml)
+      - name: 🔐 Configurar credenciais Maven (settings.xml) para GitHub Packages
         if: github.event_name != 'pull_request'
         run: |
           mkdir -p ~/.m2
@@ -112,20 +118,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🔎 Verificar se settings.xml foi criado
-        if: github.event_name != 'pull_request'
-        run: |
-          ls -la ~/.m2
-          test -f ~/.m2/settings.xml || (echo "ERRO: ~/.m2/settings.xml não existe" && exit 1)
-
-      # 🚀 Deploy do artefato Maven no GitHub Packages
-      - name: 🚀 Deploy no GitHub Packages (Maven Repository)
+      - name: 🚀 Deploy no GitHub Packages (Maven)
         if: github.event_name != 'pull_request'
         working-directory: ${{ github.event.inputs.project_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          OWNER_REPO="${{ github.repository }}"    # ex: usuario/repositorio
+          OWNER_REPO="${{ github.repository }}"
           mvn -B -V -s ~/.m2/settings.xml \
             -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${OWNER_REPO} \
             deploy
