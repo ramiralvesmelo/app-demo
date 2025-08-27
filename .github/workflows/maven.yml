@@ -117,14 +117,14 @@ jobs:
           echo "== Arquivos JAR/WAR encontrados =="
           find . -type f \( -name "*.jar" -o -name "*.war" \) -print || true
 
-      - name: 📤 Upload de artefatos gerados (JAR/WAR) para download
+      - name: 📤 Upload de artefatos (JAR/WAR)
         uses: actions/upload-artifact@v4
         with:
           name: maven-targets
           path: |
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.jar
-            ${{ github.workspace }}/${{ github.event.inputs.project_dir }}/**/target/*.war
-          if-no-files-found: warn
+            ${{ github.event.inputs.project_dir }}/**/target/*.jar
+            ${{ github.event.inputs.project_dir }}/**/target/*.war
+          if-no-files-found: warn          
 
       - name: 📊 Enviar snapshot de dependências para Dependabot/Graph
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
