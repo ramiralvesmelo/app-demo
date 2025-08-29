@@ -160,7 +160,3 @@ Se o projeto estiver em **AutoScan**, a execução **irá falhar**.
 
 Este projeto é distribuído sob a licença **MIT**.
 Sinta-se livre para usar, modificar e compartilhar.
-
----
-
-👨‍💻 **Autor:** Ramir Alves
