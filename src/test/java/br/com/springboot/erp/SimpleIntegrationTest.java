@@ -18,7 +18,7 @@ import br.com.springboot.erp.config.TestConfig;
  * ⚠️ Falha se houver erro de configuração no Spring, no JPA ou em qualquer bean obrigatório.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @Import(TestConfig.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {

@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import br.com.springboot.erp.controller.ProductController;
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.service.ProductService;
 
 /**
