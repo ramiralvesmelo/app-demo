@@ -1,0 +1,231 @@
+{
+    "info": {
+        "name": "ERP API Collection",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "CustomerController",
+            "item": [
+                {
+                    "name": "Criar Cliente",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/customers",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "customers"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Jo\\u00e3o da Silva\",\n    \"email\": \"joao.silva@example.com\",\n    \"phone\": \"83999999999\",\n    \"address\": \"Rua das Flores, 123, Jo\\u00e3o Pessoa - PB\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Atualizar Cliente",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/customers/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "customers",
+                                "1"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Jo\\u00e3o da Silva Junior\",\n    \"email\": \"joao.junior@example.com\",\n    \"phone\": \"83988888888\",\n    \"address\": \"Av. Principal, 456, Campina Grande - PB\"\n}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ProductController",
+            "item": [
+                {
+                    "name": "Criar Produto",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/products",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "products"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"sku\": \"PROD-001\",\n    \"name\": \"Notebook Dell Inspiron\",\n    \"description\": \"Notebook 15'' i7, 16GB RAM, SSD 512GB\",\n    \"price\": 4999.9,\n    \"stock\": 20\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Atualizar Produto",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/products/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "products",
+                                "1"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"sku\": \"PROD-001\",\n    \"name\": \"Notebook Dell Inspiron\",\n    \"description\": \"Atualizado para vers\\u00e3o 2025\",\n    \"price\": 5299.9,\n    \"stock\": 15\n}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "OrderController",
+            "item": [
+                {
+                    "name": "Criar Pedido",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/orders?customerId=1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "orders"
+                            ],
+                            "query": [
+                                {
+                                    "key": "customerId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[\n    {\n        \"productId\": 101,\n        \"quantity\": 2,\n        \"price\": 250.0\n    },\n    {\n        \"productId\": 102,\n        \"quantity\": 1,\n        \"price\": 1200.0\n    }\n]"
+                        }
+                    }
+                },
+                {
+                    "name": "Adicionar Item ao Pedido",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/orders/1/items",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "orders",
+                                "1",
+                                "items"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"productId\": 103,\n    \"quantity\": 1,\n    \"price\": 800.0\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Atualizar Item do Pedido",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/orders/1/items",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "orders",
+                                "1",
+                                "items"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 5,\n    \"productId\": 101,\n    \"quantity\": 3,\n    \"price\": 250.0\n}"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -113,6 +113,17 @@ A aplicação será iniciada em:
 
 ---
 
+## 🌐 Collection de Endpoints
+
+O repositório já inclui a collection `app-demo-collection.json`, que contém exemplos prontos de chamadas à API (Clientes, Produtos e Pedidos).
+
+### Importar no Postman ou Insomnia
+
+1. Clique em **Import > File**
+2. Selecione `app-demo-collection.json`
+
+---
+
 ## 🗂️ Estrutura do Projeto
 
 ```
