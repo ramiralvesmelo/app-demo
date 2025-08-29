@@ -31,10 +31,10 @@ jobs:
       - name: 📥 Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: ⚙️ Configurar JDK 17 + cache Maven
+      - name: ⚙️ Configurar JDK 21 + cache Maven
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
 
