@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -37,7 +38,7 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
         return entityManager.merge(entity);
     }
     
-    @Override
+    @Override    
     public Optional<T> findById(ID id) {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }

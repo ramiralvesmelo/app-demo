@@ -24,13 +24,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.springboot.erp.TesteApplication;
+import br.com.springboot.erp.Application;
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
-import br.com.springboot.erp.model.OrderItem;
-import br.com.springboot.erp.model.Product;
-import br.com.springboot.erp.model.Status;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
+import br.com.springboot.erp.model.entity.Product;
+import br.com.springboot.erp.model.entity.Status;
 import br.com.springboot.erp.repository.ProductRepository;
 import br.com.springboot.erp.service.OrderService;
 
@@ -41,7 +41,7 @@ import br.com.springboot.erp.service.OrderService;
  * JPA/Hibernate (H2 em memória), incluindo criação/atualização de itens,
  * cálculo de total, finalização/cancelamento e efeitos em estoque.
  *
- * 🧪 Contexto - Runner: {@link SpringRunner} - App: {@link TesteApplication} -
+ * 🧪 Contexto - Runner: {@link SpringRunner} - App: {@link Application} -
  * Config: {@link TestConfig} (DataSource H2, JPA/Hibernate, transações) -
  * Perfil: {@code test} - Transações: {@link Transactional} garante rollback e
  * isolamento por teste
@@ -61,7 +61,7 @@ import br.com.springboot.erp.service.OrderService;
  * {@link Status#CANCELADO} ao cancelar).
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 @Import(TestConfig.class)
 @Transactional

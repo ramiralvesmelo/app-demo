@@ -36,9 +36,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.springboot.erp.TesteApplication;
+import br.com.springboot.erp.Application;
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.service.ProductService;
 
 /**
@@ -79,7 +79,7 @@ import br.com.springboot.erp.service.ProductService;
  *  - ❗ Precisão monetária: garantir uso de {@link BigDecimal} com scale adequado no JSON de resposta.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 @Import(TestConfig.class)
 @Transactional

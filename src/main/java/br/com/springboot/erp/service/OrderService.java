@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.springboot.erp.model.Order;
-import br.com.springboot.erp.model.OrderItem;
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
 
 /**
  * Serviço para gerenciamento de pedidos.

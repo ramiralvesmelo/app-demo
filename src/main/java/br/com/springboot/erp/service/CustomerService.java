@@ -3,7 +3,7 @@ package br.com.springboot.erp.service;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.springboot.erp.model.Customer;
+import br.com.springboot.erp.model.entity.Customer;
 
 /**
  * Serviço para gerenciamento de clientes.

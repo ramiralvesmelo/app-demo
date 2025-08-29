@@ -24,7 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.repository.ProductRepository;
 import br.com.springboot.erp.service.ProductServiceImpl;
 

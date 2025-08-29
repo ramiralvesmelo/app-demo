@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 
 /**
  * Serviço para gerenciamento de produtos.

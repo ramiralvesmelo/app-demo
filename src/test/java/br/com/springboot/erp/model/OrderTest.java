@@ -11,6 +11,10 @@ import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
+import br.com.springboot.erp.model.entity.Status;
+
 public class OrderTest {
 
     @Test
