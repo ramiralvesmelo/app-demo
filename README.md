@@ -21,8 +21,6 @@ A proposta do projeto não é apenas apresentar o código-fonte, mas **evidencia
 
 ### 🎯 Objetivos
 
-## 📌 Objetivos/Pontos do Projeto
-
 * 🗄️ **Utilizar JPA/Hibernate** para persistência e mapeamento objeto-relacional.
 * ✅ **Garantir qualidade com testes automatizados** (unitários e de integração) utilizando **JUnit 5** e **Mockito**.
 * 🔄 **Implementar Integração Contínua** com **GitHub Actions**.
