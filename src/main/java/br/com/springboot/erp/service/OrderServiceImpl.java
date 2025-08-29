@@ -10,16 +10,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
-import br.com.springboot.erp.model.OrderItem;
-import br.com.springboot.erp.model.Product;
-import br.com.springboot.erp.model.Status;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
+import br.com.springboot.erp.model.entity.Product;
+import br.com.springboot.erp.model.entity.Status;
 import br.com.springboot.erp.repository.CustomerRepository;
 import br.com.springboot.erp.repository.ProductRepository;
 
@@ -33,16 +32,11 @@ public class OrderServiceImpl implements OrderService {
     private EntityManager entityManager;
 
     private final CustomerRepository customerRepository;
-    private final ProductRepository productRepository;
-    private final ProductService productService;
-
-    @Autowired
+    
     public OrderServiceImpl(CustomerRepository customerRepository, 
                            ProductRepository productRepository,
                            ProductService productService) {
         this.customerRepository = customerRepository;
-        this.productRepository = productRepository;
-        this.productService = productService;
     }
 
     @Override

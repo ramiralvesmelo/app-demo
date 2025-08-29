@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.springboot.erp.model.Customer;
+import br.com.springboot.erp.model.entity.Customer;
 
 /**
  * Implementação do repositório para a entidade Customer.

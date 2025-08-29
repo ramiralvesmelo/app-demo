@@ -15,8 +15,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
 import br.com.springboot.erp.repository.CustomerRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

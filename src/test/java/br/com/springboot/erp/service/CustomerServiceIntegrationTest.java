@@ -24,10 +24,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.springboot.erp.TesteApplication;
+import br.com.springboot.erp.Application;
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
 import br.com.springboot.erp.service.CustomerService;
 
 /**
@@ -39,7 +39,7 @@ import br.com.springboot.erp.service.CustomerService;
  *
  * 🧪 Contexto
  *  - Runner: {@link SpringRunner}
- *  - App: {@link TesteApplication}
+ *  - App: {@link Application}
  *  - Config: {@link TestConfig} (DataSource H2, JPA/Hibernate, transações)
  *  - Perfil: {@code test}
  *  - Transações: {@link Transactional} garante rollback automático e isolamento por teste
@@ -61,7 +61,7 @@ import br.com.springboot.erp.service.CustomerService;
  *  - Padrão de regex para e-mail: ajustar para validar TLD e domínios corretamente (`^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$`).
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 @Import(TestConfig.class)
 @Transactional

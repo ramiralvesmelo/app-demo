@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.springboot.erp.model.Customer;
+import br.com.springboot.erp.model.entity.Customer;
 import br.com.springboot.erp.repository.CustomerRepository;
 
 /**

@@ -2,6 +2,7 @@ package br.com.springboot.erp.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.dto.ProductDto;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.service.ProductService;
 
 /**
@@ -32,38 +34,43 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.findAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.findAllProducts()
+                .stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         return productService.findProductById(id)
+                .map(ProductDto::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/sku/{sku}")
-    public ResponseEntity<Product> getProductBySku(@PathVariable String sku) {
+    public ResponseEntity<ProductDto> getProductBySku(@PathVariable String sku) {
         return productService.findProductBySku(sku)
+                .map(ProductDto::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody Product product) {
         Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductDto.from(savedProduct));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         return productService.findProductById(id)
                 .map(existingProduct -> {
                     product.setId(id);
                     Product updatedProduct = productService.saveProduct(product);
-                    return ResponseEntity.ok(updatedProduct);
+                    return ResponseEntity.ok(ProductDto.from(updatedProduct));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -96,8 +103,11 @@ public class ProductController {
     }
 
     @GetMapping("/low-stock")
-    public ResponseEntity<List<Product>> getProductsWithLowStock() {
-        List<Product> products = productService.findProductsWithLowStock();
+    public ResponseEntity<List<ProductDto>> getProductsWithLowStock() {
+        List<ProductDto> products = productService.findProductsWithLowStock()
+                .stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 
@@ -108,7 +118,7 @@ public class ProductController {
     }
 
     @GetMapping("/price-range")
-    public ResponseEntity<List<Product>> getProductsByPriceRange(
+    public ResponseEntity<List<ProductDto>> getProductsByPriceRange(
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice) {
 
@@ -119,7 +129,10 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Product> products = productService.findProductsByPriceRange(minPrice, maxPrice);
+        List<ProductDto> products = productService.findProductsByPriceRange(minPrice, maxPrice)
+                .stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 }
