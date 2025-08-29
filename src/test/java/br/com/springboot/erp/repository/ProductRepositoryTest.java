@@ -1,8 +1,8 @@
 package br.com.springboot.erp.repository;
 
-import br.com.springboot.erp.TesteApplication;
+import br.com.springboot.erp.Application;
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.repository.ProductRepository;
 
 import org.junit.Before;
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * {@link ProductRepository} em um contexto real de persistência (H2 em
  * memória), cobrindo buscas, filtros e regras simples de estoque/preço.
  *
- * 🧪 Contexto - Runner: {@link SpringRunner} - App: {@link TesteApplication} -
+ * 🧪 Contexto - Runner: {@link SpringRunner} - App: {@link Application} -
  * Config: {@link TestConfig} (DataSource H2, JPA/Hibernate, transações) -
  * Perfil: {@code test} - Transações: {@link Transactional} garante
  * isolamento/rollback por teste
@@ -47,7 +47,7 @@ import static org.junit.Assert.*;
  * mapeamento adequados (precisão/scale na coluna).
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @Import(TestConfig.class)
 @ActiveProfiles("test")
 @Transactional

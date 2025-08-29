@@ -2,7 +2,7 @@ package br.com.springboot.erp.repository;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Product;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;

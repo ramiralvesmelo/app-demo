@@ -32,10 +32,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
-import br.com.springboot.erp.model.OrderItem;
-import br.com.springboot.erp.model.Product;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
+import br.com.springboot.erp.model.entity.Product;
 import br.com.springboot.erp.repository.CustomerRepository;
 import br.com.springboot.erp.repository.ProductRepository;
 
@@ -375,7 +375,7 @@ public class OrderServiceTest {
 
         // assert: total e status
         assertEquals(new BigDecimal("20.00"), order.getTotalAmount());
-        assertEquals(br.com.springboot.erp.model.Status.FINALIZADO, order.getStatus());
+        assertEquals(br.com.springboot.erp.model.entity.Status.FINALIZADO, order.getStatus());
 
         // assert: estoque baixado (100 - 2 = 98)
         assertEquals(Integer.valueOf(98), product.getStock());

@@ -1,6 +1,7 @@
 package br.com.springboot.erp.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.springboot.erp.model.Customer;
+import br.com.springboot.erp.model.dto.CustomerDto;
+import br.com.springboot.erp.model.entity.Customer;
 import br.com.springboot.erp.service.CustomerService;
 
 /**
@@ -27,50 +29,60 @@ import br.com.springboot.erp.service.CustomerService;
 public class CustomerController {
 
     private final CustomerService customerService;
-    
+
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
+
     @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers() {
-        List<Customer> customers = customerService.findAllCustomers();
+    public ResponseEntity<List<CustomerDto>> getAllCustomers() {
+        List<CustomerDto> customers = customerService.findAllCustomers()
+                .stream()
+                .map(CustomerDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(customers);
     }
+    
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         return customerService.findCustomerById(id)
+                .map(CustomerDto::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Customer> getCustomerByEmail(@PathVariable String email) {
+    public ResponseEntity<CustomerDto> getCustomerByEmail(@PathVariable String email) {
         return customerService.findCustomerByEmail(email)
+                .map(CustomerDto::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Customer>> searchCustomersByName(@RequestParam String name) {
-        List<Customer> customers = customerService.searchCustomersByName(name);
+    public ResponseEntity<List<CustomerDto>> searchCustomersByName(@RequestParam String name) {
+        List<CustomerDto> customers = customerService.searchCustomersByName(name)
+                .stream()
+                .map(CustomerDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(customers);
     }
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<CustomerDto> createCustomer(@RequestBody Customer customer) {
         Customer savedCustomer = customerService.saveCustomer(customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCustomer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CustomerDto.from(savedCustomer));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody @Valid Customer customer) {
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody @Valid Customer customer) {
         return customerService.findCustomerById(id)
-                .map(existingCustomer -> {
+                .map(existing -> {
                     customer.setId(id);
-                    Customer updateCustomer = customerService.updateCustomer(customer);
-                    return ResponseEntity.ok(updateCustomer);
+                    Customer updated = customerService.updateCustomer(customer);
+                    return ResponseEntity.ok(CustomerDto.from(updated));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -82,15 +94,17 @@ public class CustomerController {
     }
 
     @GetMapping("/with-orders")
-    public ResponseEntity<List<Customer>> getCustomersWithOrders() {
-        List<Customer> customers = customerService.findCustomersWithOrders();
+    public ResponseEntity<List<CustomerDto>> getCustomersWithOrders() {
+        List<CustomerDto> customers = customerService.findCustomersWithOrders()
+                .stream()
+                .map(CustomerDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(customers);
     }
 
-    @PostMapping("/validate-email")
+    @GetMapping("/validate-email")
     public ResponseEntity<Boolean> validateEmail(@RequestParam String email) {
         boolean isValid = customerService.validateCustomerEmail(email);
-        
         return isValid ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
     }
 }

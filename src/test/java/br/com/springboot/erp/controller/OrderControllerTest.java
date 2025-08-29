@@ -31,8 +31,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import br.com.springboot.erp.config.GlobalExceptionHandler;
-import br.com.springboot.erp.model.Order;
-import br.com.springboot.erp.model.OrderItem;
+import br.com.springboot.erp.model.entity.Order;
+import br.com.springboot.erp.model.entity.OrderItem;
 import br.com.springboot.erp.service.CustomerService;
 import br.com.springboot.erp.service.OrderService;
 
