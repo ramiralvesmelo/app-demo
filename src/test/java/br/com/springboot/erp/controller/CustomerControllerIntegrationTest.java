@@ -34,10 +34,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.springboot.erp.TesteApplication;
+import br.com.springboot.erp.Application;
 import br.com.springboot.erp.config.TestConfig;
-import br.com.springboot.erp.model.Customer;
-import br.com.springboot.erp.model.Order;
+import br.com.springboot.erp.model.entity.Customer;
+import br.com.springboot.erp.model.entity.Order;
 import br.com.springboot.erp.service.CustomerService;
 
 /**
@@ -72,7 +72,7 @@ import br.com.springboot.erp.service.CustomerService;
  *  - ❗ Serialização cíclica: usar {@code @JsonManagedReference}/{@code @JsonBackReference} em Customer/Order.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TesteApplication.class)
+@SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 @Import(TestConfig.class)
 @Transactional

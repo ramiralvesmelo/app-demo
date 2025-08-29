@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.springboot.erp.model.Customer;
+import br.com.springboot.erp.model.entity.Customer;
 
 /**
  * Repositório para a entidade Customer.

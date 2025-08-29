@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import br.com.springboot.erp.model.entity.OrderItem;
+
 class OrderItemTest {
 
     @Test
