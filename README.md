@@ -13,7 +13,11 @@
 
 📘 **Aplicação de Demonstração ERP**
 
-Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base de estudo para **boas práticas em Java**.
+O projeto apresenta um **código-fonte simples e bem estruturado** no modelo arquitetural **MVC**, acompanhado por **testes unitários e de integração**. Essa combinação garante **clareza na arquitetura**, **confiabilidade no código** e oferece uma base sólida para **aprendizado**, **experimentação** e **amadurecimento de ideias**.
+
+Além do código, o repositório integra-se a um conjunto de **ferramentas modernas de DevSecOps**, simulando o cotidiano de um time profissional e demonstrando como **práticas corporativas podem ser aplicadas em projetos Java**.
+
+A proposta do projeto não é apenas apresentar o código-fonte, mas **evidenciar sua interação com o ambiente e com todo o ecossistema de ferramentas**, destacando como cada componente contribui para um **fluxo de desenvolvimento seguro, automatizado e alinhado às demandas do mercado atual**.
 
 ### 🎯 Objetivos
 
@@ -32,8 +36,6 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 * 🏷️ **Exibir badges de status** (build, qualidade, cobertura, dependabot) no README de forma simplificada.
 
 ---
-
-👉 Sugestão: incluir **Badges no README** (build, cobertura, versão, qualidade do código) para dar mais visibilidade e profissionalismo ao repositório.
 
 ### 🛠️ Tecnologias
 
@@ -57,27 +59,6 @@ Projeto em **Spring Boot 2.7** que simula um ERP simplificado, criado como base 
 * [Java 11+](https://adoptium.net/)
 * [Maven 3.8+](https://maven.apache.org/)
 * [Lombok plugin](https://projectlombok.org/setup/) instalado na IDE (**Eclipse STS** ou **IntelliJ IDEA**) para suporte às anotações.
-
----
-
-## 📦 Como Compilar e Executar
-
-Clone o repositório e execute os comandos abaixo:
-
-```bash
-# Clonar o projeto
-git clone https://github.com/seu-usuario/app-demo.git
-cd app-demo
-
-# Compilar
-mvn clean install
-
-# Executar a aplicação
-mvn spring-boot:run
-```
-
-A aplicação será iniciada em:
-👉 [http://localhost:8080](http://localhost:8080)
 
 ---
 
@@ -113,19 +94,40 @@ Aqui está uma tabela organizada com os **plugins configurados no `pom.xml`**, s
 
 ---
 
+## 📦 Como Compilar e Executar
+
+Clone o repositório e execute os comandos abaixo:
+
+```bash
+# Clonar o projeto
+git clone https://github.com/seu-usuario/app-demo.git
+cd app-demo
+
+# Compilar
+mvn clean install
+
+# Executar a aplicação
+mvn spring-boot:run
+```
+
+A aplicação será iniciada em:
+👉 [http://localhost:8080](http://localhost:8080)
+
+---
+
 ## 🗂️ Estrutura do Projeto
 
 ```
 app-demo
- ├── src/main/java/br/com/springboot/erp
- │    ├── controller    # Camada de exposição (REST Controllers)
- │    ├── model         # Entidades JPA
- │    ├── repository    # Repositórios JPA
- │    ├── service       # Regras de negócio
- │    └── AppDemo.java  # Classe principal
- ├── src/test/java/...  # Testes unitários e de integração
- ├── pom.xml            # Configuração Maven
- └── .github/workflows/maven.yml   # Pipeline de CI/CD no GitHub Actions
+├── src/main/java/br/com/springboot/erp
+│   ├── controller    # Camada de exposição (REST Controllers)
+│   ├── model         # Entidades JPA (entity domínio)
+│   ├── repository    # Repositórios JPA (Spring Data)
+│   ├── service       # Regras de negócio (@Transactional)
+│   └── AppDemo.java  # Classe principal Spring Boot
+├── src/test/java/... # Testes unitários e de integração
+├── pom.xml           # Build Maven e plugins (Surefire, JaCoCo, CycloneDX)
+└── .github/workflows/maven.yml  # Pipeline CI
 ```
 
 ---
