@@ -16,17 +16,10 @@
     <version>1.0.0</version>
     <name>app-demo</name>
 	<description>
-	Aplicação de demonstração de um sistema ERP simplificado, desenvolvida em 
-	Spring Boot 2.7 com Hibernate (JPA), validação de dados e banco em memória H2. 
-	
-	Este projeto tem como objetivo servir de base para estudos e práticas de:
-	- Arquitetura de aplicações Java corporativas
-	- Boas práticas em design e implementação de serviços REST
-	- Persistência com JPA/Hibernate e consultas em banco em memória
-	- Testes unitários e de integração com JUnit e Mockito
-	
-	Ideal para uso em treinamentos, entrevistas técnicas e como modelo de referência
-	para criação de aplicações empresariais modulares com Spring Boot.
+		Aplicação Java com arquitetura MVC — clara e modular. 
+		Demo ERP em Spring Boot 2.7 (JPA/Hibernate, validação, H2), 
+		base para estudos em Java, REST, persistência e testes (JUnit/Mockito). 
+		Útil para treinamentos e como referência para apps modulares.
 	</description>
 
     <properties>
